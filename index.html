@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cart API</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://kit.fontawesome.com/9c1668d95b.js" crossorigin="anonymous"></script>
+</head>
+<body>
+    <style>
+
+        li{
+            width: 290px;
+            height: 370px;   
+            list-style: none;
+            /* max-width: 200px; */
+            /* min-width: 200px; */
+            /* border: 2px solid red; */
+            border-radius: 20px;
+            background:white;
+            margin-top: 20px;
+            /* box-shadow: 5px 5px 5px cyan; */
+            list-style: none;
+            border: 3px solid #000;
+            
+        }
+        img{
+            width: 250px;
+            height: 250px;
+            margin-left: 20px;
+        }
+        .h1{
+            color:red;
+            /* margin-left: 110px; */
+            font-size: 30px;
+
+        }
+        .pr{
+            font-size: 30px;
+            margin-left: 90px;
+            /* color: white; */
+        }
+        .h2{
+            font-size:20px;
+            margin-left: 90px;
+            /* color: white; */
+        }
+        .select{
+            /* width: 320px; */
+            /* height: 200px; */
+            border:1px solid yellow;
+            position: absolute;
+            
+            /* background:black; */
+            color: black;
+            text-align: center;
+            font-size: 25px;
+            border-radius: 10px;
+            margin-left: -150px;
+            background-color:white;
+            overflow-y: scroll;
+            overflow-x: hidden;
+            width: 310px;
+            visibility: hidden;
+        }
+.active{
+    height: 400px;
+    transition-duration: .6s;
+    visibility: visible;
+}
+.mm{
+    font-weight: 130px;
+}
+
+
+
+    </style>
+    <nav class="w-[full] h-[100px] bg-cyan-200 flex items-center justify-around px-[20px]">
+        <div><h1 class="text-2xl text-red-600 mm">Shoping Cart</h1>
+        
+        </div>
+       
+        <div id="icon" onclick="hand()" class="w-[60px]  text-3xl h-[60px] cursor-pointer hover:text-red-500">
+            <i class="fa-solid fa-dolly mt-[20px]">   <span class="text-xl ml-[0px] -mt-[0px] absolute " id="counter">0</span> </i>
+      
+         
+      
+      
+
+            <div class="select"></div>
+        </div>
+            
+     
+        
+    </nav>
+<!-- +++++++nav end++++++ -->
+<div id="main" class="h-full bg-black w-full  flex flex-wrap items-center justify-evenly  gap-[30px]">
+   
+</div>
+
+<script>
+    var main=document.getElementById('main')
+    var btn=document.getElementById('btn')
+    var flag;
+            // Step 1  
+    fetch('https://fakestoreapi.com/products')
+    .then(res=>res.json())
+    .then(data=>{
+        mydata(data)
+        flag=data
+        console.log(data)
+    })
+   
+        // Step 2
+     function mydata(a){
+     a.forEach((ele,index) => {
+        console.log(ele,index)
+        var li=document.createElement("li")
+        li.innerHTML=`<img src="${ele.image}"> 
+        <h1 class="pr" >Price:<span class="h1">${ele.price}$</span></h1>
+        <h2 class="h2"> ${ele.category}</h2>
+        <button onclick="handle(${ele.id})" class="border-2 ml-[110px] hover:bg-white hover:text-black hover:border-black border-blue-500 text-white bg-black px-[20px] py-[5px]">Add</button>`
+        main.appendChild(li)  
+    });
+   
+     }
+     
+        //    Step 3
+      function handle(id){
+        console.log("yes")
+        flag.forEach((ele,index)=>{
+         if(index+1==id){
+            let obj={
+                id:ele.id,
+                image:ele.image,
+                category:ele.category,
+                price:ele.price,
+             
+            }
+         }
+             if(index+1== id){
+            var obj={
+                image:ele.image,
+                price:ele.price,
+                category:ele.category
+            }
+        } 
+        //   Step 4
+      if(obj)
+    {
+        var  a=JSON.parse(localStorage.getItem("data"))
+        if(a){
+            a.push(obj)
+            localStorage.setItem("data",JSON.stringify(a))
+        }
+        else{
+            localStorage.setItem("data",JSON.stringify([obj]))
+         
+    }
+helo()
+} 
+
+        })
+       
+      }
+      
+      var select = document.querySelector(".select")
+
+function hand(){
+    select.classList.toggle("active")
+    select.innerHTML=""
+    // select.style.display="inline-block"
+    console.log("tested")
+    var a = JSON.parse(localStorage.getItem('data'));
+    a.forEach((ele,index)=> {
+        var li= document.createElement('li')
+        li.innerHTML=`<img src="${ele.image}" alt="" > <h1> Category : ${ele.category}</h1>  <p><span class="span1">
+             Price : </span>${ele.price}<span>$</span>
+            <button onclick="handdel(${index})" class=" bg-black text-white padding-10px border-2 border-yellow-500">delete</button>`
+        select.appendChild(li) 
+    });
+    helo()
+   }
+   function handdel(i){
+    var x = JSON.parse(localStorage.getItem('data'))
+    x.splice(i,1)
+    localStorage.setItem('data',JSON.stringify(x))
+    hand()
+   }
+
+   var counter=document.getElementById('counter')
+   function helo(){
+    var x = JSON.parse(localStorage.getItem('data'))
+    
+    counter.innerHTML=x.length
+   }
+
+
+</script>
+
+</body>
+</html>
